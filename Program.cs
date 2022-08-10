@@ -7,6 +7,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddRazorPages();
 
+builder.Services.AddServerSideBlazor();
+
 builder.Services.AddDbContext<DataContext>(opts => {
     opts.UseSqlServer(builder.Configuration["ConnectionStrings:PeopleConnection"]);
     opts.EnableSensitiveDataLogging(true);
@@ -23,6 +25,8 @@ app.MapControllerRoute(
     "controllers/{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+app.MapBlazorHub();
 
 var context = app.Services.CreateScope()
                 .ServiceProvider
