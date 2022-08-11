@@ -19,7 +19,12 @@
         }
     </tbody>
 </table>
-<SelectFilter values="@Cities" title="City"/>
+
+<SelectFilter values="@Cities"
+              title="City"
+              autofocus="true"
+              name="city"
+              required="true" />
 
 @code {
     [Inject]
