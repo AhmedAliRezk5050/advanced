@@ -25,7 +25,7 @@
               autofocus="true"
               name="city"
               required="true"
-              CustomEvent="@HandleCustom" />
+              @bind-SelectedValue="SelectedCity"/>
 
 @code {
     [Inject]
@@ -49,9 +49,4 @@
 
     [Parameter]
     public string? SelectTitle { get; set; }
-
-    public void HandleCustom(string newValue)
-    {
-        SelectedCity = newValue;
-    }
 }
