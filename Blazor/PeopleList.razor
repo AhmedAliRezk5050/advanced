@@ -19,18 +19,8 @@
         }
     </tbody>
 </table>
-<div class="form-group">
-    <label for="city">City</label>
-    <select name="city" class="form-control" @bind="SelectedCity">
-        <option disabled selected value="">Select City</option>
-        @foreach (string city in Cities ?? Enumerable.Empty<string>())
-        {
-            <option value="@city" selected="@(city == SelectedCity)">
-                @city
-            </option>
-        }
-    </select>
-</div>
+<SelectFilter values="@Cities" title="City"/>
+
 @code {
     [Inject]
     public DataContext? Context { get; set; }
