@@ -1,13 +1,20 @@
 ﻿<div class="m-2 p-2 border">
-    <button class="btn btn-primary" @onclick="IncrementCounter">Increment</button>
-    <span class="p-2">Counter Value: @Counter</span>
+    <button class="btn btn-primary" @onclick="@(e => IncrementCounter(e, 0))">
+        Increment Counter #1
+    </button>
+    <span class="p-2">Counter Value: @Counter[0]</span>
 </div>
-
+<div class="m-2 p-2 border">
+    <button class="btn btn-primary" @onclick="@(e => IncrementCounter(e, 1))">
+        Increment Counter #2
+    </button>
+    <span class="p-2">Counter Value: @Counter[1]</span>
+</div>
 @code {
-    public int Counter { get; set; } = 1;
+    public int[] Counter { get; set; } = new int[] { 1, 1 };
 
-    public void IncrementCounter(MouseEventArgs e)
+    public void IncrementCounter(MouseEventArgs e, int index)
     {
-        Counter++;
+        Counter[index]++;
     }
 }
