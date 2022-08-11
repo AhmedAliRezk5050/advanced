@@ -1,58 +1,19 @@
-﻿<TableTemplate>
+﻿<TableTemplate RowType="Person" RowData="People">
     <Header>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Dept</th>
-        <th>Location</th>
-    </tr>
+    <tr><th>ID</th><th>Name</th><th>Dept</th><th>Location</th></tr>
     </Header>
-    <Body>
-        @foreach (Person p in People ?? Enumerable.Empty<Person>())
-        {
-        <tr @key="p.PersonId" class="@GetClass(p?.Location?.City)">
-            <td>@p?.PersonId</td>
-            <td>@p?.Surname, @p?.Firstname</td>
-            <td>@p?.Department?.Name</td>
-            <td>@p?.Location?.City, @p?.Location?.State</td>
-        </tr>
-        }
-    </Body>
+    <RowTemplate Context="p">
+        <td>@p.PersonId</td>
+        <td>@p.Surname, @p.Firstname</td>
+        <td>@p.Department?.Name</td>
+        <td>@p.Location?.City, @p.Location?.State</td>
+    </RowTemplate>
 </TableTemplate>
-
-<ThemeWrapper Theme="info" Title="Location Selector">
-    <SelectFilter values="@Cities"
-                  title="@SelectTitle"
-                  autofocus="true"
-                  name="city"
-                  required="true"
-                  @bind-SelectedValue="SelectedCity" />
-    <button class="btn btn-primary mt-2"
-            @onclick="@(() => SelectedCity = "Oakland")">
-        Change
-    </button>
-</ThemeWrapper>
 
 @code {
     [Inject]
     public DataContext? Context { get; set; }
-
-    public IEnumerable<Person>? People =>
-        Context?.People
-                .Include(p => p.Department)
-                .Include(p => p.Location)
-                .Take(ItemCount);
-
-    public IEnumerable<string>? Cities => Context?.Locations.Select(l => l.City);
-
-    public string SelectedCity { get; set; } = string.Empty;
-
-    public string GetClass(string? city) =>
-        SelectedCity == city ? "bg-info text-white" : "";
-
-    [Parameter]
-    public int ItemCount { get; set; } = 4;
-
-    [Parameter]
-    public string? SelectTitle { get; set; }
+    public IEnumerable<Person>? People => Context?.People
+    .Include(p => p.Department)
+    .Include(p => p.Location);
 }
