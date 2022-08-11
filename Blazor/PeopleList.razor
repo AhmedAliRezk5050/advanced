@@ -10,7 +10,7 @@
     <tbody>
         @foreach (Person p in People ?? Enumerable.Empty<Person>())
         {
-            <tr class="@GetClass(p?.Location?.City)">
+            <tr @key="p.PersonId" class="@GetClass(p?.Location?.City)">
                 <td>@p?.PersonId</td>
                 <td>@p?.Surname, @p?.Firstname</td>
                 <td>@p?.Department?.Name</td>
@@ -20,12 +20,18 @@
     </tbody>
 </table>
 
-<SelectFilter values="@Cities"
-              title="@SelectTitle"
-              autofocus="true"
-              name="city"
-              required="true"
-              @bind-SelectedValue="SelectedCity"/>
+<ThemeWrapper Theme="info" Title="Location Selector">
+    <SelectFilter values="@Cities"
+                  title="@SelectTitle"
+                  autofocus="true"
+                  name="city"
+                  required="true"
+                  @bind-SelectedValue="SelectedCity" />
+    <button class="btn btn-primary mt-2"
+            @onclick="@(() => SelectedCity = "Oakland")">
+        Change
+    </button>
+</ThemeWrapper>
 
 @code {
     [Inject]
