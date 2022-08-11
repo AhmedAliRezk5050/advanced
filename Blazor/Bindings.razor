@@ -1,6 +1,6 @@
 ﻿<div class="mb-3">
     <label>City:</label>
-    <input class="form-control" @bind="City"/>
+    <input class="form-control" @bind-value="City" @bind-value:event="oninput"/>
 </div>
 <div class="p-2 mb-2">City Value: @City</div>
 <button class="btn btn-primary" @onclick="@(() => City = "Paris")">Paris</button>
