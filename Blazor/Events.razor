@@ -1,20 +1,23 @@
-﻿<div class="m-2 p-2 border">
-    <button class="btn btn-primary" @onclick="@(e => IncrementCounter(e, 0))">
-        Increment Counter #1
-    </button>
-    <span class="p-2">Counter Value: @Counter[0]</span>
-</div>
-<div class="m-2 p-2 border">
-    <button class="btn btn-primary" @onclick="@(e => IncrementCounter(e, 1))">
-        Increment Counter #2
-    </button>
-    <span class="p-2">Counter Value: @Counter[1]</span>
-</div>
-@code {
-    public int[] Counter { get; set; } = new int[] { 1, 1 };
+﻿@for (int i = 0; i < ElementCount; i++)
+{
+    int local = i;
+    <div class="m-2 p-2 border">
+        <button class="btn btn-primary" @onclick="@(() => IncrementCounter(local))">
+            Increment Counter #@(i + 1)
+        </button>
+        <span class="p-2">Counter Value: @GetCounter(i)</span>
+    </div>
+}
 
-    public void IncrementCounter(MouseEventArgs e, int index)
-    {
-        Counter[index]++;
-    }
+@code {
+    public int ElementCount { get; set; } = 4;
+
+    public Dictionary<int, int> Counters { get; } = new Dictionary<int, int>();
+
+    public int GetCounter(int index) =>
+        Counters.ContainsKey(index) ? Counters[index] : 0;
+    
+    
+    public void IncrementCounter(int index) =>
+        Counters[index] = GetCounter(index) + 1;
 }
