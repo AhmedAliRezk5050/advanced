@@ -1,24 +1,24 @@
-﻿<table class="table table-sm table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Dept</th>
-            <th>Location</th>
-        </tr>
-    </thead>
-    <tbody>
+﻿<TableTemplate>
+    <Header>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Dept</th>
+        <th>Location</th>
+    </tr>
+    </Header>
+    <Body>
         @foreach (Person p in People ?? Enumerable.Empty<Person>())
         {
-            <tr @key="p.PersonId" class="@GetClass(p?.Location?.City)">
-                <td>@p?.PersonId</td>
-                <td>@p?.Surname, @p?.Firstname</td>
-                <td>@p?.Department?.Name</td>
-                <td>@p?.Location?.City, @p?.Location?.State</td>
-            </tr>
+        <tr @key="p.PersonId" class="@GetClass(p?.Location?.City)">
+            <td>@p?.PersonId</td>
+            <td>@p?.Surname, @p?.Firstname</td>
+            <td>@p?.Department?.Name</td>
+            <td>@p?.Location?.City, @p?.Location?.State</td>
+        </tr>
         }
-    </tbody>
-</table>
+    </Body>
+</TableTemplate>
 
 <ThemeWrapper Theme="info" Title="Location Selector">
     <SelectFilter values="@Cities"
