@@ -1,0 +1,30 @@
+﻿<TableTemplate RowType="Department" RowData="Departments"
+               Highlight="@(d => d.Name)"
+               SortDirection="@(d => d.Name)">
+    <Header>
+        <tr>
+            <th>ID</th><th>Name</th><th>People</th><th>Locations</th>
+        </tr>
+    </Header>
+    <RowTemplate Context="d">
+        <td>@d.DepartmentId</td>
+        <td>@d.Name</td>
+        <td>@(string.Join(", ", d.People!.Select(p => p.Surname)))</td>
+        <td>
+            @(string.Join(", ", d.People!.Select(p =>
+                p.Location!.City).Distinct()))
+        </td>
+    </RowTemplate>
+</TableTemplate>
+
+@code {
+
+    [Inject]
+    public DataContext? Context { get; set; }
+
+    public IEnumerable<Department>? Departments =>
+        Context?.Departments?
+            .Include(d => d.People!)
+            .ThenInclude(p => p.Location!);
+
+}
