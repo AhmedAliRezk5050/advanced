@@ -1,14 +1,19 @@
 ﻿@typeparam RowType
 
+<link rel="stylesheet" href="/scss/errorBoundaries.css" />
+
 <div class="container-fluid">
     <div class="row p-2">
         <div class="col">
             <SelectFilter Title="@("Sort")" Values="@SortDirectionChoices"
-                          @bind-SelectedValue="SortDirectionSelection"/>
+                @bind-SelectedValue="SortDirectionSelection" />
         </div>
         <div class="col">
-            <SelectFilter Title="@("Highlight")" Values="@HighlightChoices()"
-                          @bind-SelectedValue="HighlightSelection"/>
+            <ErrorBoundary>
+                <SelectFilter Title="@("Highlight")" Values="@HighlightChoices()"
+                    @bind-SelectedValue="HighlightSelection" />
+            </ErrorBoundary>
+
         </div>
     </div>
 </div>
@@ -19,13 +24,13 @@
         <thead>@Header</thead>
     }
     <tbody>
-    @if (RowTemplate != null)
-    {
-        @foreach (RowType item in SortedData())
+        @if (RowTemplate != null)
         {
-            <tr class="@IsHighlighted(item)">@RowTemplate(item)</tr>
+            @foreach (RowType item in SortedData())
+            {
+                <tr class="@IsHighlighted(item)">@RowTemplate(item)</tr>
+            }
         }
-    }
     </tbody>
 </table>
 
@@ -39,31 +44,31 @@
 
     [Parameter]
     public IEnumerable<RowType> RowData { get; set; }
-        = Enumerable.Empty<RowType>();
+    = Enumerable.Empty<RowType>();
 
     [Parameter]
     public Func<RowType, string> Highlight { get; set; } = (row) => string.Empty;
 
     public IEnumerable<string> HighlightChoices() =>
-        RowData.Select(item => Highlight(item)).Distinct();
+    RowData.Select(item => Highlight(item)).Distinct();
 
     public string? HighlightSelection { get; set; }
 
     public string IsHighlighted(RowType item) =>
-        Highlight(item) == HighlightSelection ? "table-dark text-white" : "";
+    Highlight(item) == HighlightSelection ? "table-dark text-white" : "";
 
     [Parameter]
     public Func<RowType, string> SortDirection { get; set; }
-        = (row) => String.Empty;
+    = (row) => String.Empty;
 
     public string[] SortDirectionChoices =
-        new string[] { "Ascending", "Descending" };
+    new string[] { "Ascending", "Descending" };
 
     public string SortDirectionSelection { get; set; } = "Ascending";
 
     public IEnumerable<RowType> SortedData() =>
-        SortDirectionSelection == "Ascending"
-            ? RowData.OrderBy(SortDirection)
-            : RowData.OrderByDescending(SortDirection);
+    SortDirectionSelection == "Ascending"
+    ? RowData.OrderBy(SortDirection)
+    : RowData.OrderByDescending(SortDirection);
 
 }
