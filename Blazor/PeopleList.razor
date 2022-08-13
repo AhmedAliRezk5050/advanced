@@ -1,4 +1,6 @@
-﻿<TableTemplate RowType="Person" RowData="People"
+﻿@page "/people"
+
+<TableTemplate RowType="Person" RowData="People"
                Highlight="@(p => p.Location?.City)" SortDirection="@(p => p.Surname)">
     <Header>
         <tr>
