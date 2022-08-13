@@ -5,12 +5,10 @@
             <div class="d-grid gap-2">
                 @foreach (string key in NavLinks.Keys)
                 {
-                    <NavLink class="btn btn-outline-primary"
-                             href="@NavLinks[key]"
-                             ActiveClass="btn-primary text-white"
-                             Match="NavLinkMatch.Prefix">
+                    <MultiNavLink class="btn btn-outline-primary btn-block"
+                                  href="@NavLinks[key]" ActiveClass="btn-primary text-white">
                         @key
-                    </NavLink>
+                    </MultiNavLink>
                 }
             </div>
         </div>
@@ -22,12 +20,12 @@
 
 @code {
 
-    public Dictionary<string, string> NavLinks
-        = new Dictionary<string, string>
+    public Dictionary<string, string[]> NavLinks
+        = new Dictionary<string, string[]>
         {
-            { "People", "/people" },
-            { "Departments", "/depts" },
-            { "Details", "/person" }
+            { "People", new string[] { "/people", "/" } },
+            { "Departments", new string[] { "/depts", "/departments" } },
+            { "Details", new string[] { "/person" } }
         };
 
 }
