@@ -24,6 +24,8 @@
 
 <SelectFilter Title="@("Theme")" Values="Themes" @bind-SelectedValue="Theme"/>
 
+<button class="btn btn-primary" @onclick="HandleClick">People</button>
+
 @code {
 
     [Inject]
@@ -37,5 +39,9 @@
     public string Theme { get; set; } = "info";
 
     public string[] Themes = new string[] { "primary", "info", "success" };
-
-}
+    
+    [Inject]
+    public NavigationManager? NavManager { get; set; }
+    
+    public void HandleClick() => NavManager?.NavigateTo("/people");
+} 
