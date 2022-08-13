@@ -1,10 +1,7 @@
 ﻿<div class="mb-3 p-2 bg-@Theme @TextColor()">
     <label for="select-@Title">@Title</label>
-    <select name="select-@Title"
-            class="form-control"
-            @attributes="Attrs"
-            value="@SelectedValue"
-            @onchange="HandleSelect">
+    <select name="select-@Title" class="form-control" @attributes="Attrs" value="@SelectedValue"
+        @onchange="HandleSelect">
         <option disabled selected value="">Select @Title</option>
         @foreach (string val in Values)
         {
@@ -35,6 +32,10 @@
     public async Task HandleSelect(ChangeEventArgs e)
     {
         SelectedValue = e.Value as string;
+        if (SelectedValue == "Sales")
+        {
+            throw new Exception("Sales cannot be selected");
+        }
         await SelectedValueChanged.InvokeAsync(SelectedValue);
     }
 
@@ -42,6 +43,6 @@
     public string Theme { get; set; } = "";
 
     public string TextColor() => string.IsNullOrEmpty(Theme)
-        ? "text-dark" : "text-light";
+    ? "text-dark" : "text-light";
 
 }
