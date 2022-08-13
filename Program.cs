@@ -28,6 +28,8 @@ app.MapRazorPages();
 
 app.MapBlazorHub();
 
+app.MapFallbackToPage("/_Host");
+
 var context = app.Services.CreateScope()
                 .ServiceProvider
                 .GetRequiredService<DataContext>();
