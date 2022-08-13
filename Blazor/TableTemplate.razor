@@ -9,7 +9,7 @@
                 @bind-SelectedValue="SortDirectionSelection" />
         </div>
         <div class="col">
-            <ErrorBoundary>
+            <ErrorBoundary @ref="boundary">
                 <ChildContent>
                     <SelectFilter Title="@("Highlight")" Values="@HighlightChoices()"
                         @bind-SelectedValue="HighlightSelection" />
@@ -17,6 +17,10 @@
                 <ErrorContent>
                     <h4 class="bg-danger text-white text-center h-100 p-2">
                         Inline error: Sales Selected
+                        <div>
+                            <button class="btn btn-light btn-sm m-1"
+                                @onclick="@(() => boundary?.Recover())">Recover</button>
+                        </div>
                     </h4>
                 </ErrorContent>
             </ErrorBoundary>
@@ -77,5 +81,7 @@
     SortDirectionSelection == "Ascending"
     ? RowData.OrderBy(SortDirection)
     : RowData.OrderByDescending(SortDirection);
+
+    ErrorBoundary? boundary;
 
 }
