@@ -10,8 +10,15 @@
         </div>
         <div class="col">
             <ErrorBoundary>
-                <SelectFilter Title="@("Highlight")" Values="@HighlightChoices()"
-                    @bind-SelectedValue="HighlightSelection" />
+                <ChildContent>
+                    <SelectFilter Title="@("Highlight")" Values="@HighlightChoices()"
+                        @bind-SelectedValue="HighlightSelection" />
+                </ChildContent>
+                <ErrorContent>
+                    <h4 class="bg-danger text-white text-center h-100 p-2">
+                        Inline error: Sales Selected
+                    </h4>
+                </ErrorContent>
             </ErrorBoundary>
 
         </div>
