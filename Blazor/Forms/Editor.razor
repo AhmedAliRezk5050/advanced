@@ -16,10 +16,21 @@
             <label>Surname</label>
             <InputText class="form-control" @bind-Value="PersonData.Surname"/>
         </div>
-        <div class="mb-3">
+        <div class="form-group">
             <label>Dept ID</label>
-            <InputNumber class="form-control"
-                         @bind-Value="PersonData.DepartmentId"/>
+            <CustomSelect TValue="long" Values="Departments"
+                          Parser="@((string str) => long.Parse(str))"
+                          @bind-Value="PersonData.DepartmentId">
+                <option selected disabled value="0">Choose a Department</option>
+            </CustomSelect>
+        </div>
+        <div class="form-group">
+            <label>Location ID</label>
+            <CustomSelect TValue="long" Values="Locations"
+                          Parser="@((string str) => long.Parse(str))"
+                          @bind-Value="PersonData.LocationId">
+                <option selected disabled value="0">Choose a Location</option>
+            </CustomSelect>
         </div>
         <div class="text-center">
             <NavLink class="btn btn-secondary" href="/forms">Back</NavLink>
@@ -39,12 +50,24 @@
     public long Id { get; set; }
 
     public Person PersonData { get; set; } = new();
+    
+    public IDictionary<string, long> Departments { get; set; }
+        = new Dictionary<string, long>();
+    
+    public IDictionary<string, long> Locations { get; set; }
+        = new Dictionary<string, long>();
 
-    protected async override Task OnParametersSetAsync()
+    protected override async Task OnParametersSetAsync()
     {
         if (Context != null)
         {
             PersonData = await Context.People.FindAsync(Id) ?? new Person();
+
+            Departments = await Context.Departments.
+                ToDictionaryAsync(d => d.Name, d => d.DepartmentId);
+            
+            Locations = await Context.Locations
+                .ToDictionaryAsync(l => $"{l.City}, {l.State}", l => l.LocationId);
         }
     }
 
