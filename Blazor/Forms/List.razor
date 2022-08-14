@@ -36,7 +36,11 @@
     </tbody>
 </table>
 
-<button class="btn btn-danger" @onclick="UpdateData">Update</button>
+<button class="btn btn-danger my-2" @onclick="@(() => UpdateData())">Update</button>
+
+<button class="btn btn-info my-2" @onclick="SortWithQuery">Sort (With Query)</button>
+
+<button class="btn btn-info my-2" @onclick="SortWithoutQuery">Sort (No Query)</button>
 
 <button class="btn btn-primary" @onclick="@(() => Counter++)">Increment</button>
 <span class="h5">Counter: @Counter</span>
@@ -47,27 +51,42 @@
     public DataContext? Context { get; set; }
 
     public IEnumerable<Person> People { get; set; } = Enumerable.Empty<Person>();
-    
-    protected override async Task OnInitializedAsync() {
+
+    protected override async Task OnInitializedAsync()
+    {
         await UpdateData();
     }
-    
-    private async Task UpdateData() {
-        if (Context != null) {
+
+    private IQueryable<Person> Query =>
+        Context!.People.Include(p => p.Department).Include(p => p.Location);
+
+    private async Task UpdateData(IQueryable<Person>? query = null) =>
+        People = await (query ?? Query).ToListAsync<Person>();
+
+    public async Task SortWithQuery()
+    {
+        await UpdateData(Query.OrderBy(p => p.Surname));
+    }
+
+    public void SortWithoutQuery()
+    {
+        People = People.OrderBy(p => p.Firstname).ToList<Person>();
+    }
+
+    private async Task UpdateData()
+    {
+        if (Context != null)
+        {
             People = await Context.People.Include(p => p.Department)
                 .Include(p => p.Location).ToListAsync<Person>();
-        } else {
+        }
+        else
+        {
             People = Enumerable.Empty<Person>();
         }
     }
 
-    protected override void OnInitialized()
-    {
-        People = Context?.People?.Include(p => p.Department).Include(p => p.Location)
-                 ?? Enumerable.Empty<Person>();
-    }
-
     string GetEditUrl(long id) => $"/forms/edit/{id}";
-    
+
     public int Counter { get; set; } = 0;
 }
