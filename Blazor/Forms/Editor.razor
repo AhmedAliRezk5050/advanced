@@ -2,10 +2,11 @@
 @page "/forms/create"
 @layout EmptyLayout
 @inherits OwningComponentBase<DataContext>
-<link href="/blazorValidation.css" rel="stylesheet"/>
+<link href="/scss/blazorValidation.css" rel="stylesheet"/>
 <h4 class="bg-@Theme text-center text-white p-2">@Mode</h4>
 <EditForm Model="PersonData" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator/>
+    <DeptStateValidator DepartmentId="2" State="CA" />
     @if (Mode == "Edit")
     {
         <div class="form-group">
