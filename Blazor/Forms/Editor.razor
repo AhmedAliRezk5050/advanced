@@ -2,10 +2,29 @@
 @layout EmptyLayout
 <h4 class="bg-primary text-center text-white p-2">Edit</h4>
 <FormSpy PersonData="PersonData">
-    <h4 class="text-center">Form Placeholder</h4>
-    <div class="text-center">
-        <NavLink class="btn btn-secondary mt-2" href="/forms">Back</NavLink>
-    </div>
+    <EditForm Model="PersonData">
+        <div class="mb-3">
+            <label>Person ID</label>
+            <InputNumber class="form-control"
+                         @bind-Value="PersonData.PersonId" disabled/>
+        </div>
+        <div class="mb-3">
+            <label>Firstname</label>
+            <InputText class="form-control" @bind-Value="PersonData.Firstname"/>
+        </div>
+        <div class="mb-3">
+            <label>Surname</label>
+            <InputText class="form-control" @bind-Value="PersonData.Surname"/>
+        </div>
+        <div class="mb-3">
+            <label>Dept ID</label>
+            <InputNumber class="form-control"
+                         @bind-Value="PersonData.DepartmentId"/>
+        </div>
+        <div class="text-center">
+            <NavLink class="btn btn-secondary" href="/forms">Back</NavLink>
+        </div>
+    </EditForm>
 </FormSpy>
 
 @code {
