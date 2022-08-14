@@ -1,5 +1,6 @@
 ﻿@page "/forms/edit/{id:long}"
 @layout EmptyLayout
+@implements IDisposable
 <link href="/scss/blazorValidation.css" rel="stylesheet"/>
 <h4 class="bg-primary text-center text-white p-2">Edit</h4>
 <h6 class="bg-info text-center text-white p-2">@FormSubmitMessage</h6>
@@ -86,5 +87,13 @@
     public void HandleValidSubmit() => FormSubmitMessage = "Valid Data Submitted";
 
     public void HandleInvalidSubmit() => FormSubmitMessage = "Invalid Data Submitted";
+
+    public void Dispose()
+    {
+        if (Context != null)
+        {
+            Context.Entry(PersonData).State = EntityState.Detached;
+        }
+    }
 
 }
