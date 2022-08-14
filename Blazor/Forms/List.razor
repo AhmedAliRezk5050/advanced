@@ -36,6 +36,8 @@
     </tbody>
 </table>
 
+<button class="btn btn-danger" @onclick="UpdateData">Update</button>
+
 <button class="btn btn-primary" @onclick="@(() => Counter++)">Increment</button>
 <span class="h5">Counter: @Counter</span>
 
@@ -45,6 +47,19 @@
     public DataContext? Context { get; set; }
 
     public IEnumerable<Person> People { get; set; } = Enumerable.Empty<Person>();
+    
+    protected override async Task OnInitializedAsync() {
+        await UpdateData();
+    }
+    
+    private async Task UpdateData() {
+        if (Context != null) {
+            People = await Context.People.Include(p => p.Department)
+                .Include(p => p.Location).ToListAsync<Person>();
+        } else {
+            People = Enumerable.Empty<Person>();
+        }
+    }
 
     protected override void OnInitialized()
     {
