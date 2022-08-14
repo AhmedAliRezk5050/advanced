@@ -83,4 +83,14 @@
         });
     }
 
+    [JSInvokable]
+    public static void ToggleEnabled() => ToggleEvent?.Invoke(null, new EventArgs());
+
+    private static event EventHandler? ToggleEvent;
+
+    protected override void OnInitialized()
+    {
+        ToggleEvent += (sender, args) => SetEnabled(!Enabled);
+    }
+
 }
