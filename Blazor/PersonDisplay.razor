@@ -12,7 +12,7 @@ else
         <tr>
             <th>Id</th><td>@Person.PersonId</td>
         </tr>
-        <tr>
+        <tr @ref="RowReference">
             <th>Surname</th><td>@Person.Surname</td>
         </tr>
         <tr>
@@ -51,9 +51,11 @@ else
         }
     }
 
+    public ElementReference RowReference { get; set; }
+
     public async Task HandleClick()
     {
-        await JSRuntime!.InvokeVoidAsync("addTableRows", 2);
+        await JSRuntime!.InvokeVoidAsync("addTableRows", 2, RowReference);
     }
 
 }

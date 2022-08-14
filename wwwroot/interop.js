@@ -1,14 +1,13 @@
-﻿function addTableRows(colCount) {
-    let elem = document.querySelector("tbody");
+﻿function addTableRows(colCount, elem) {
+    let row = document.createElement("tr")
     
-    let row = document.createElement("tr");
-    
-    elem.append(row);
+    elem.parentNode.insertBefore(row, elem);
     
     for (let i = 0; i < colCount; i++) {
         let cell = document.createElement("td");
         
-        cell.innerText = "New Elements"
+        cell.innerText = "New Elements";
+        
         row.append(cell);
     }
 }
