@@ -1,11 +1,13 @@
 ﻿@page "/forms/edit/{id:long}"
 @layout EmptyLayout
-<link href="/scss/blazorValidation.css" rel="stylesheet" />
+<link href="/scss/blazorValidation.css" rel="stylesheet"/>
 <h4 class="bg-primary text-center text-white p-2">Edit</h4>
+<h6 class="bg-info text-center text-white p-2">@FormSubmitMessage</h6>
 <FormSpy PersonData="PersonData">
-    <EditForm Model="PersonData">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+    <EditForm Model="PersonData" OnValidSubmit="HandleValidSubmit"
+              OnInvalidSubmit="HandleInvalidSubmit">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
         <div class="mb-3">
             <label>Person ID</label>
             <InputNumber class="form-control"
@@ -13,17 +15,17 @@
         </div>
         <div class="mb-3">
             <label>Firstname</label>
-            <ValidationMessage For="@(() => PersonData.Firstname)" />
+            <ValidationMessage For="@(() => PersonData.Firstname)"/>
             <InputText class="form-control" @bind-Value="PersonData.Firstname"/>
         </div>
         <div class="mb-3">
             <label>Surname</label>
-            <ValidationMessage For="@(() => PersonData.Surname)" />
+            <ValidationMessage For="@(() => PersonData.Surname)"/>
             <InputText class="form-control" @bind-Value="PersonData.Surname"/>
         </div>
         <div class="form-group">
             <label>Dept ID</label>
-            <ValidationMessage For="@(() => PersonData.DepartmentId)" />
+            <ValidationMessage For="@(() => PersonData.DepartmentId)"/>
             <CustomSelect TValue="long" Values="Departments"
                           Parser="@((string str) => long.Parse(str))"
                           @bind-Value="PersonData.DepartmentId">
@@ -32,7 +34,7 @@
         </div>
         <div class="form-group">
             <label>Location ID</label>
-            <ValidationMessage For="@(() => PersonData.LocationId)" />
+            <ValidationMessage For="@(() => PersonData.LocationId)"/>
             <CustomSelect TValue="long" Values="Locations"
                           Parser="@((string str) => long.Parse(str))"
                           @bind-Value="PersonData.LocationId">
@@ -40,6 +42,7 @@
             </CustomSelect>
         </div>
         <div class="text-center">
+            <button type="submit" class="btn btn-primary mt-2">Submit</button>
             <NavLink class="btn btn-secondary" href="/forms">Back</NavLink>
         </div>
     </EditForm>
@@ -57,10 +60,10 @@
     public long Id { get; set; }
 
     public Person PersonData { get; set; } = new();
-    
+
     public IDictionary<string, long> Departments { get; set; }
         = new Dictionary<string, long>();
-    
+
     public IDictionary<string, long> Locations { get; set; }
         = new Dictionary<string, long>();
 
@@ -72,10 +75,16 @@
 
             Departments = await Context.Departments.
                 ToDictionaryAsync(d => d.Name, d => d.DepartmentId);
-            
+
             Locations = await Context.Locations
                 .ToDictionaryAsync(l => $"{l.City}, {l.State}", l => l.LocationId);
         }
     }
+
+    public string FormSubmitMessage { get; set; } = "Form Data Not Submitted";
+
+    public void HandleValidSubmit() => FormSubmitMessage = "Valid Data Submitted";
+
+    public void HandleInvalidSubmit() => FormSubmitMessage = "Invalid Data Submitted";
 
 }
