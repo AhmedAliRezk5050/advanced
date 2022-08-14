@@ -75,8 +75,12 @@
 
     public void SetEnabled(bool enabled)
     {
-        Enabled = enabled;
-        CheckMatch(NavManager!.Uri);
+        InvokeAsync(() =>
+        {
+            Enabled = enabled;
+            CheckMatch(NavManager!.Uri);
+            StateHasChanged();
+        });
     }
 
 }

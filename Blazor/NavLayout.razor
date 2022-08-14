@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@using Advanced.Services
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-3">
@@ -25,6 +27,9 @@
 
 @code {
 
+    [Inject]
+    public ToggleService? Toggler { get; set; }
+
     public Dictionary<string, string[]> NavLinks
         = new Dictionary<string, string[]>
         {
@@ -36,15 +41,17 @@
     public Dictionary<string, MultiNavLink> Refs
         = new Dictionary<string, MultiNavLink>();
 
-    private bool LinksEnabled = true;
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && Toggler != null)
+        {
+            Toggler.EnrolComponents(Refs.Values);
+        }
+    }
 
     public void ToggleLinks()
     {
-        LinksEnabled = !LinksEnabled;
-        foreach (MultiNavLink link in Refs.Values)
-        {
-            link.SetEnabled(LinksEnabled);
-        }
+        Toggler?.ToggleComponents();
     }
 
 }
