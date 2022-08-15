@@ -32,6 +32,10 @@ app.MapBlazorHub();
 
 app.MapFallbackToPage("/_Host");
 
+app.UseBlazorFrameworkFiles("/webassembly");
+
+app.MapFallbackToFile("/webassembly/{*path:nonfile}", "/webassembly/index.html");
+
 var context = app.Services.CreateScope()
                 .ServiceProvider
                 .GetRequiredService<DataContext>();
