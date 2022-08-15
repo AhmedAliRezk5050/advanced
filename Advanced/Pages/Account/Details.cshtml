@@ -1,0 +1,33 @@
+﻿@page
+@model DetailsModel
+<table class="table table-sm table-bordered">
+    <tbody>
+    @if (Model.Cookie == null)
+    {
+        <tr>
+            <th class="text-center">No Identity Cookie</th>
+        </tr>
+    }
+    else
+    {
+        <tr>
+            <th>Cookie</th>
+            <td class="text-break">@Model.Cookie</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@functions {
+
+    public class DetailsModel : PageModel
+    {
+        public string? Cookie { get; set; }
+
+        public void OnGet()
+        {
+            Cookie = Request.Cookies[".AspNetCore.Identity.Application"];
+        }
+    }
+
+}
