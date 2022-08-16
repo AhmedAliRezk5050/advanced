@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Advanced.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,10 +40,25 @@ builder.Services.Configure<IdentityOptions>(opts =>
 
 builder.Services.Configure<CookieAuthenticationOptions>(
     IdentityConstants.ApplicationScheme,
-    opts => {
+    opts =>
+    {
         opts.LoginPath = "/Authenticate";
         opts.AccessDeniedPath = "/NotAllowed";
     });
+
+builder.Services.AddAuthentication(opts =>
+{
+    opts.DefaultScheme =
+        CookieAuthenticationDefaults.AuthenticationScheme;
+    opts.DefaultChallengeScheme =
+        CookieAuthenticationDefaults.AuthenticationScheme;
+}).AddCookie(opts =>
+{
+    opts.Events.DisableRedirectForPath(e => e.OnRedirectToLogin,
+        "/api", StatusCodes.Status401Unauthorized);
+    opts.Events.DisableRedirectForPath(e => e.OnRedirectToAccessDenied,
+        "/api", StatusCodes.Status403Forbidden);
+});
 
 var app = builder.Build();
 
