@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Advanced.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +36,13 @@ builder.Services.Configure<IdentityOptions>(opts =>
     opts.User.RequireUniqueEmail = true;
     opts.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyz";
 });
+
+builder.Services.Configure<CookieAuthenticationOptions>(
+    IdentityConstants.ApplicationScheme,
+    opts => {
+        opts.LoginPath = "/Authenticate";
+        opts.AccessDeniedPath = "/NotAllowed";
+    });
 
 var app = builder.Build();
 
