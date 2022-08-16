@@ -1,5 +1,7 @@
 ﻿const username = "bob";
 const password = "secret";
+let token;
+
 window.addEventListener("DOMContentLoaded", () => {
     const controlDiv = document.getElementById("controls");
     createButton(controlDiv, "Get Data", getData);
@@ -8,31 +10,29 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 async function login() {
-    let response = await fetch("/api/account/login", {
+    let response = await fetch("/api/account/token", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({username: username, password: password})
     });
     if (response.ok) {
-        displayData("Logged in");
+        token = (await response.json()).token;
+        displayData("Logged in", token);
     } else {
         displayData(`Error: ${response.status}: ${response.statusText}`);
     }
 }
 
 async function logout() {
-    let response = await fetch("/api/account/logout", {
-        method: "POST"
-    });
-    if (response.ok) {
-        displayData("Logged out");
-    } else {
-        displayData(`Error: ${response.status}: ${response.statusText}`);
-    }
+    token = "";
+    displayData("Logged out");
 }
 
 async function getData() {
-    let response = await fetch("/api/people");
+    let response = await fetch("/api/people", {
+        headers: {"Authorization": `Bearer ${token}`}
+    });
+    
     if (response.ok) {
         let jsonData = await response.json();
         displayData(...jsonData.map(item => `${item.surname}, ${item.firstname}`));

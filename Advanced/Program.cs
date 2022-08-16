@@ -3,6 +3,10 @@ using Advanced.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +62,35 @@ builder.Services.AddAuthentication(opts =>
         "/api", StatusCodes.Status401Unauthorized);
     opts.Events.DisableRedirectForPath(e => e.OnRedirectToAccessDenied,
         "/api", StatusCodes.Status403Forbidden);
+}).AddJwtBearer(opts =>
+{
+    var x = builder.Configuration["jwtSecret"];
+    Console.WriteLine("Test -------------- {0}", x);
+    opts.RequireHttpsMetadata = false;
+    opts.SaveToken = true;
+    opts.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.ASCII.GetBytes(builder.Configuration["jwtSecret"])),
+        ValidateAudience = false,
+        ValidateIssuer = false
+    };
+    opts.Events = new JwtBearerEvents
+    {
+        OnTokenValidated = async ctx =>
+        {
+            var usrmgr = ctx.HttpContext.RequestServices
+                .GetRequiredService<UserManager<IdentityUser>>();
+            var signinmgr = ctx.HttpContext.RequestServices
+                .GetRequiredService<SignInManager<IdentityUser>>();
+            string? username =
+                ctx.Principal?.FindFirst(ClaimTypes.Name)?.Value;
+            IdentityUser idUser = await usrmgr.FindByNameAsync(username);
+            ctx.Principal =
+                await signinmgr.CreateUserPrincipalAsync(idUser);
+        }
+    };
 });
 
 var app = builder.Build();
