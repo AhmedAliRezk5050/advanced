@@ -66,4 +66,6 @@ var context = app.Services.CreateScope()
 
 SeedData.SeedDatabase(context);
 
+IdentitySeedData.CreateAdminAccount(app.Services, app.Configuration);
+
 app.Run();
