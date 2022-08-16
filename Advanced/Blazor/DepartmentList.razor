@@ -1,7 +1,8 @@
 ﻿@page "/departments"
 @page "/depts"  
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize(Roles = "Admins")]
+@using Microsoft.AspNetCore.Components.Authorization
+@attribute [Authorize]
 
 <CascadingValue Name="BgTheme" Value="Theme" IsFixed="false">
     <TableTemplate RowType="Department" RowData="Departments"
@@ -17,8 +18,15 @@
             <td>@d.Name</td>
             <td>@(string.Join(", ", d.People!.Select(p => p.Surname)))</td>
             <td>
-                @(string.Join(", ", d.People!.Select(p =>
-                    p.Location!.City).Distinct()))
+                <AuthorizeView Roles="Admins">
+                    <Authorized>
+                        @(String.Join(", ",
+                            d.People!.Select(p => p.Location!.City).Distinct()))
+                    </Authorized>
+                    <NotAuthorized>
+                        (Not authorized)
+                    </NotAuthorized>
+                </AuthorizeView>
             </td>
         </RowTemplate>
     </TableTemplate>
@@ -41,9 +49,9 @@
     public string Theme { get; set; } = "info";
 
     public string[] Themes = new string[] { "primary", "info", "success" };
-    
+
     [Inject]
     public NavigationManager? NavManager { get; set; }
-    
+
     public void HandleClick() => NavManager?.NavigateTo("/people");
-} 
+}
