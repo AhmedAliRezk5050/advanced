@@ -64,8 +64,6 @@ builder.Services.AddAuthentication(opts =>
         "/api", StatusCodes.Status403Forbidden);
 }).AddJwtBearer(opts =>
 {
-    var x = builder.Configuration["jwtSecret"];
-    Console.WriteLine("Test -------------- {0}", x);
     opts.RequireHttpsMetadata = false;
     opts.SaveToken = true;
     opts.TokenValidationParameters = new TokenValidationParameters
